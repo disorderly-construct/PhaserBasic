@@ -75,34 +75,44 @@ class Scene2 extends Phaser.Scene {
     }
 
     update() {
-        let keyPressFlag = false;
-        let activeKey = null;
+        // Reset the player's velocity.
+        this.player.setVelocity(0, 0);
     
-        // Check for key presses and releases.
-        for (let key of this.keys) {
-            if (this.cursors[key].isDown) {
-                // If a key is down, set it as the active key and set the keyPressFlag to true.
-                activeKey = key;
-                keyPressFlag = true;            
-            }
+        // Check for key presses.
+        if (this.cursors.W.isDown && !this.keysPressed.has('W')) {
+            this.keysPressed.add('W');
+        } else if (!this.cursors.W.isDown) {
+            this.keysPressed.delete('W');
         }
     
-        // If any key is pressed, perform the action for the most recently pressed key.
-        if (activeKey) {
-            this.actions[activeKey]();
+        if (this.cursors.A.isDown && !this.keysPressed.has('A')) {
+            this.keysPressed.add('A');
+        } else if (!this.cursors.A.isDown) {
+            this.keysPressed.delete('A');
+        }
+    
+        if (this.cursors.S.isDown && !this.keysPressed.has('S')) {
+            this.keysPressed.add('S');
+        } else if (!this.cursors.S.isDown) {
+            this.keysPressed.delete('S');
+        }
+    
+        if (this.cursors.D.isDown && !this.keysPressed.has('D')) {
+            this.keysPressed.add('D');
+        } else if (!this.cursors.D.isDown) {
+            this.keysPressed.delete('D');
+        }
+    
+        // If any keys are being pressed, take the last one and perform the corresponding action.
+        if (this.keysPressed.size > 0) {
+            let lastKeyPressed = Array.from(this.keysPressed).pop();
+            this.actions[lastKeyPressed]();
         } else {
-            // If no keys are being pressed, stop the player's movement.
-            this.player.setVelocity(0, 0);
-        }
-    
-        // If no keys are being pressed and an animation is playing, stop the animation and set the player's texture to the first frame of the last animation played.
-        if (!keyPressFlag && this.player.anims.isPlaying) {
-            this.player.anims.stop();
-            this.player.setTexture(`char${this.lastAnimKey.charAt(0).toUpperCase() + this.lastAnimKey.slice(1)}`, 0);
-        }
-    
-        if (this.physics.collide(this.player, this.house)) { // Access with this.house
-            console.log('Collision happened!');
+            // If no keys are being pressed and an animation is playing, stop the animation and set the player's texture to the first frame of the last animation played.
+            if (this.player.anims.isPlaying) {
+                this.player.anims.stop();
+                this.player.setTexture(`char${this.lastAnimKey.charAt(0).toUpperCase() + this.lastAnimKey.slice(1)}`, 0);
+            }
         }
     }
     
