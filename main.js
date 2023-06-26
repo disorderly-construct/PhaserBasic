@@ -14,7 +14,7 @@ var config = {
     scale: {
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
-    scene: [Scene1, Scene2]
+    scene: [Scene1, MainScene]
 };
 
 
